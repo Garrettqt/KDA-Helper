@@ -1,0 +1,112 @@
+#this is the KDA record helper
+
+#I save game data as a hash map of names to arrays of three ints
+#originally had a game class that got stored but this turned out being a lot more elegant
+#I ended up needing a lot more functions then I thought but here we are
+
+require 'set'
+
+class StatTracker
+    def initialize
+        @gameStats = Hash.new
+    end
+
+    def addGame name #add a new game
+        if !@gameStats[name]
+            @gameStats[name] = [0,0,0]
+        end
+    end
+
+    def getGameStats name #Made the adjustment that you mentioned of letting you add by checking
+        if !@gameStats[name]
+            @gameStats[name] = [0,0,0]
+        end 
+        @gameStats[name]
+    end
+
+    def removeGame name #takes out a game
+        @gameStats[name] = nil
+    end
+
+    def resetGame name #sets a game back to 0, 0, 0
+        @gameStats[name] = [0,0,0]
+    end
+
+    #sets methods for each stats
+
+    def setKills name, kills
+        if @gameStats[name]
+            @gameStats[name][0] = kills
+        else 
+            p "Game not found"
+        end
+    end
+    
+    def setDeaths name, deaths
+        if @gameStats[name]
+            @gameStats[name][1] = deaths
+        else 
+            p "Game not found"
+        end
+    end
+
+    def setAssists name, assists
+        if @gameStats[name]
+            @gameStats[name][2] = assists
+        else 
+            p "Game not found"
+        end
+    end
+
+    #three methods to add to stats in case that is easier 
+
+    def incrementKills name, kills
+        if @gameStats[name]
+            @gameStats[name][0] += kills
+        else 
+            p "Game not found"
+        end
+    end
+    
+    def incrementDeaths name, deaths
+        if @gameStats[name]
+            @gameStats[name][1] += deaths
+        else 
+            p "Game not found"
+        end
+    end
+
+    def incrementAssists name, assists
+        if @gameStats[name]
+            @gameStats[name][2] += assists
+        else 
+            p "Game not found"
+        end
+    end
+
+    def gameToString name  #finally a nice to string method
+        if !@gameStats[name]
+            p "Game not found"
+        else
+            p "in " + name + " you have " + @gameStats[name][0].to_s + " kills " + @gameStats[name][1].to_s + " deaths " + @gameStats[name][2].to_s + " assists"
+        end
+    end
+end
+
+x = StatTracker.new
+x.addGame("Chess")
+x.gameToString("Chess") #expected 0,0,0
+x.setDeaths("Chess", 3)
+x.setKills("Chess", 1)
+x.setAssists("Chess", 6)
+x.gameToString("Chess") #expected 1,3,6
+x.incrementDeaths("Chess", 2)
+x.incrementAssists("Chess", -1)
+x.incrementKills("Chess", 3)
+x.gameToString("Chess") #expected 4,5,5
+x.resetGame("Chess")
+x.gameToString("Chess") #expected 0,0,0
+x.removeGame("Chess")
+x.gameToString("Chess") #expected Game not found
+x.getGameStats("Chess")
+x.gameToString("Chess") #expected 0,0,0
